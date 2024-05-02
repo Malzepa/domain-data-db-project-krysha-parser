@@ -4,6 +4,7 @@
     "module": "commonjs",
     "allowJs": true,
     "sourceMap": true,
+    "outDir": "build/src",
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -14,5 +15,6 @@
     "alwaysStrict": true,
     "resolveJsonModule": true,
     "skipLibCheck": false
-  }
+  },
+  "include": ["src/**/*", "__tests__/**/*"]
 }

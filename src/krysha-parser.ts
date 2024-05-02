@@ -1,4 +1,4 @@
-import { parseHouseInfo } from "../scr/domains/krysha-parser/index";
+import { parseHouseInfo } from "../src/domains/krysha-parser/index";
 import { initDatabase } from "./db/init-database";
 
 const start = async (): Promise<void> => {

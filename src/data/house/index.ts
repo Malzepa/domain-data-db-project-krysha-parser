@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { IHouse, HouseModel } from "../db/house";
+import { IHouse, HouseModel } from "../../db/house/index";
 
 export type SaveHouseType = {
   adId: string;
