@@ -1,6 +1,6 @@
 import axios from "axios";
 import cheerio from "cheerio";
-import HouseInfo from "../../db/houseInfo/index";
+import { HouseModel } from "../../db/house/index";
 
 export async function parseHouseInfo(url: string) {
   const urlPattern = /^https:\/\/krisha\.kz\/a\/show\/\d+$/;
@@ -17,7 +17,7 @@ export async function parseHouseInfo(url: string) {
     const html = response.data;
     const $ = cheerio.load(html);
 
-    const id = url.split("/").pop();
+    const adId = url.split("/").pop();
 
     const titleElement = $(".offer__advert-title h1");
     const title =
@@ -66,8 +66,8 @@ export async function parseHouseInfo(url: string) {
     const floor = parseInt(floorString) || 0;
     const totalFloors = parseInt(totalFloorsString) || 0;
 
-    const houseInfo = new HouseInfo({
-      id,
+    const house = new HouseModel({
+      adId,
       title,
       price,
       buildingType,
@@ -78,9 +78,9 @@ export async function parseHouseInfo(url: string) {
       totalFloors,
     });
 
-    await houseInfo.save();
+    await house.save();
 
-    console.log("House info saved:", houseInfo);
+    console.log("House info saved:", house);
   } catch (error) {
     console.error("Error parsing house info:", error);
   }

@@ -1,7 +1,12 @@
 import { parseHouseInfo } from "../scr/domains/krysha-parser/index";
-import connectToDatabase from "../scr/db/index";
+import { initDatabase } from "./db/init-database";
 
-connectToDatabase();
+const start = async (): Promise<void> => {
+  const url = "https://krisha.kz/a/show/681426253";
+  await parseHouseInfo(url);
+};
 
-const url = "https://krisha.kz/a/show/681426253";
-parseHouseInfo(url);
+(async () => {
+  await initDatabase({ main: true });
+  await start();
+})();

@@ -1,18 +1,17 @@
-import mongoose from "mongoose";
+import { Mongoose } from "mongoose";
+import { Config } from "../domains/config";
 
-export default async function connectToDatabase() {
-  let timeout = 25;
-  while (mongoose.connection.readyState === 0) {
-    if (timeout === 0) {
-      console.log("timeout");
-      throw new Error("timeout occurred with mongoose connection");
-    }
-    try {
-      await mongoose.connect("mongodb://localhost:27017/krisha-parcer-ads");
-    } catch (error) {
-      console.error("MongoDB connection error:", error);
-      timeout--;
-    }
+export class MongoDataBase {
+  public static mainDataBaseConnection: Mongoose = new Mongoose();
+  public static async initMainDataBaseConnection(): Promise<void> {
+    console.log(`Trying to connect to ${Config.mainMongoConnectionUrl}`);
+
+    return MongoDataBase.mainDataBaseConnection
+      .connect(Config.mainMongoConnectionUrl)
+      .then(() => console.log(`Connected to ${Config.mainMongoConnectionUrl}`))
+      .catch((error) => {
+        console.log(`Couldn't connect to ${Config.mainMongoConnectionUrl}`);
+        throw error;
+      });
   }
-  console.log("Database connection status:", mongoose.connection.readyState);
 }

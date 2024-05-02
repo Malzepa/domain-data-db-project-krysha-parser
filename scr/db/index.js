@@ -36,31 +36,27 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("../scr/domains/krysha-parser/index");
-var init_database_1 = require("./db/init-database");
-var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var url;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                url = "https://krisha.kz/a/show/681426253";
-                return [4 /*yield*/, (0, index_1.parseHouseInfo)(url)];
-            case 1:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); };
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, init_database_1.initDatabase)({ main: true })];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, start()];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); })();
+exports.MongoDataBase = void 0;
+var mongoose_1 = require("mongoose");
+var config_1 = require("../domains/config");
+var MongoDataBase = /** @class */ (function () {
+    function MongoDataBase() {
+    }
+    MongoDataBase.initMainDataBaseConnection = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                console.log("Trying to connect to ".concat(config_1.Config.mainMongoConnectionUrl));
+                return [2 /*return*/, MongoDataBase.mainDataBaseConnection
+                        .connect(config_1.Config.mainMongoConnectionUrl)
+                        .then(function () { return console.log("Connected to ".concat(config_1.Config.mainMongoConnectionUrl)); })
+                        .catch(function (error) {
+                        console.log("Couldn't connect to ".concat(config_1.Config.mainMongoConnectionUrl));
+                        throw error;
+                    })];
+            });
+        });
+    };
+    MongoDataBase.mainDataBaseConnection = new mongoose_1.Mongoose();
+    return MongoDataBase;
+}());
+exports.MongoDataBase = MongoDataBase;

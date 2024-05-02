@@ -39,10 +39,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseHouseInfo = void 0;
 var axios_1 = require("axios");
 var cheerio_1 = require("cheerio");
-var index_1 = require("../../db/houseInfo/index");
+var index_1 = require("../../db/house/index");
 function parseHouseInfo(url) {
     return __awaiter(this, void 0, void 0, function () {
-        var urlPattern, response, html, $, id, titleElement, title, priceString, price, buildingTypeElement, buildingType, yearBuildString, yearBuilt, areaString, area, bathroomElement, bathroom, floorInfoString, _a, floorString, totalFloorsString, floor, totalFloors, houseInfo, error_1;
+        var urlPattern, response, html, $, adId, titleElement, title, priceString, price, buildingTypeElement, buildingType, yearBuildString, yearBuilt, areaString, area, bathroomElement, bathroom, floorInfoString, _a, floorString, totalFloorsString, floor, totalFloors, house, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
@@ -59,7 +59,7 @@ function parseHouseInfo(url) {
                     response = _b.sent();
                     html = response.data;
                     $ = cheerio_1.default.load(html);
-                    id = url.split("/").pop();
+                    adId = url.split("/").pop();
                     titleElement = $(".offer__advert-title h1");
                     title = titleElement.length > 0 ? titleElement.text().trim() : "Unknown Title";
                     priceString = $(".offer__price").text().trim().replace(/\D/g, "");
@@ -87,8 +87,8 @@ function parseHouseInfo(url) {
                     _a = floorInfoString.split(" из "), floorString = _a[0], totalFloorsString = _a[1];
                     floor = parseInt(floorString) || 0;
                     totalFloors = parseInt(totalFloorsString) || 0;
-                    houseInfo = new index_1.default({
-                        id: id,
+                    house = new index_1.HouseModel({
+                        adId: adId,
                         title: title,
                         price: price,
                         buildingType: buildingType,
@@ -98,10 +98,10 @@ function parseHouseInfo(url) {
                         floor: floor,
                         totalFloors: totalFloors,
                     });
-                    return [4 /*yield*/, houseInfo.save()];
+                    return [4 /*yield*/, house.save()];
                 case 3:
                     _b.sent();
-                    console.log("House info saved:", houseInfo);
+                    console.log("House info saved:", house);
                     return [3 /*break*/, 5];
                 case 4:
                     error_1 = _b.sent();

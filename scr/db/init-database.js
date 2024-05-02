@@ -36,31 +36,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var index_1 = require("../scr/domains/krysha-parser/index");
-var init_database_1 = require("./db/init-database");
-var start = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var url;
+exports.initDatabase = void 0;
+var index_1 = require("./index");
+var initDatabase = function (options) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                url = "https://krisha.kz/a/show/681426253";
-                return [4 /*yield*/, (0, index_1.parseHouseInfo)(url)];
+                if (!(options === null || options === void 0 ? void 0 : options.main)) return [3 /*break*/, 2];
+                return [4 /*yield*/, index_1.MongoDataBase.initMainDataBaseConnection()];
             case 1:
                 _a.sent();
-                return [2 /*return*/];
+                _a.label = 2;
+            case 2: return [2 /*return*/];
         }
     });
 }); };
-(function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, init_database_1.initDatabase)({ main: true })];
-            case 1:
-                _a.sent();
-                return [4 /*yield*/, start()];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
-    });
-}); })();
+exports.initDatabase = initDatabase;
