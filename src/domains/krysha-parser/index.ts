@@ -3,15 +3,6 @@ import cheerio from "cheerio";
 import { HouseModel } from "../../db/house/index";
 
 export async function parseHouseInfo(url: string) {
-  const urlPattern = /^https:\/\/krisha\.kz\/a\/show\/\d+$/;
-
-  if (!urlPattern.test(url)) {
-    console.error(
-      "Invalid URL format. Please provide a valid krisha.kz house info URL."
-    );
-    return;
-  }
-
   try {
     const response = await axios.get(url);
     const html = response.data;
@@ -21,10 +12,13 @@ export async function parseHouseInfo(url: string) {
 
     const titleElement = $(".offer__advert-title h1");
     const title =
-      titleElement.length > 0 ? titleElement.text().trim() : "Unknown Title";
+      titleElement.length > 0
+        ? titleElement.text().trim()
+        : "Описание не указано";
 
     const priceString = $(".offer__price").text().trim().replace(/\D/g, "");
-    const price = parseInt(priceString) || 0;
+    const priceValue = parseInt(priceString) || 0;
+    const priceUnit = $(".offer__price").text().trim().replace(/\s|\d/g, "");
 
     const buildingTypeElement = $(
       "div[data-name='flat.building'] .offer__advert-short-info"
@@ -32,7 +26,7 @@ export async function parseHouseInfo(url: string) {
     const buildingType =
       buildingTypeElement.length > 0
         ? buildingTypeElement.text().trim()
-        : "Unknown Building type";
+        : "Тип постройки не указан";
 
     const yearBuildString = $(
       "div[data-name='house.year'] .offer__advert-short-info"
@@ -47,7 +41,25 @@ export async function parseHouseInfo(url: string) {
       .text()
       .trim()
       .replace(/[^\d.]/g, "");
-    const area = parseFloat(areaString) || 0;
+    const areaValue = parseFloat(areaString) || 0;
+    const areaUnit = $("div[data-name='live.square'] .offer__advert-short-info")
+      .text()
+      .trim()
+      .replace(/[^а-яА-ЯёЁ²]/g, "");
+
+    const sectorAreaString = $(
+      "div[data-name='land.square'], div[data-name='land.square_a'] .offer__advert-short-info"
+    )
+      .text()
+      .trim()
+      .replace(/[^\d.]/g, "");
+    const sectorAreaValue = parseFloat(sectorAreaString) || 0;
+    const sectorAreaUnit = $(
+      "div[data-name='land.square'], div[data-name='land.square_a'] .offer__advert-short-info"
+    )
+      .text()
+      .trim()
+      .replace(/[^а-яА-ЯёЁ²]/g, "");
 
     const bathroomElement = $(
       "div[data-name='flat.toilet'] .offer__advert-short-info"
@@ -55,7 +67,7 @@ export async function parseHouseInfo(url: string) {
     const bathroom =
       bathroomElement.length > 0
         ? bathroomElement.text().trim()
-        : "Unknown Bathroom";
+        : "Санузел не указан";
 
     const floorInfoString = $(
       '.offer__info-item[data-name="flat.floor"] .offer__advert-short-info'
@@ -69,10 +81,11 @@ export async function parseHouseInfo(url: string) {
     const house = new HouseModel({
       adId,
       title,
-      price,
+      price: { priceValue, priceUnit },
       buildingType,
       yearBuilt,
-      area,
+      area: { areaValue, areaUnit },
+      sectorArea: { sectorAreaValue, sectorAreaUnit },
       bathroom,
       floor,
       totalFloors,

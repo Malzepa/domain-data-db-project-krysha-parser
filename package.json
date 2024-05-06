@@ -1,7 +1,6 @@
 {
   "name": "domain-data-db-project-krysha-parcer",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,9 +12,12 @@
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
     "mongoose": "^8.3.3",
+    "telegraf": "^4.16.3",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@types/mongoose": "^5.11.97"
-  }
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^20.12.8"
+  },
+  "description": ""
 }

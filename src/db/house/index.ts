@@ -6,10 +6,20 @@ const COLLECTION_NAME = "House";
 export interface IHouse extends Document {
   adId: string;
   title: string;
-  price: number;
+  price: {
+    priceValue: number;
+    priceUnit: string;
+  };
   buildingType: string;
   yearBuilt: number;
-  area: number;
+  area: {
+    areaValue: number;
+    areaUnit: string;
+  };
+  sectorArea: {
+    sectorAreaValue: number;
+    sectorAreaUnit: string;
+  };
   bathroom: string;
   floor: number;
   totalFloors: number;
@@ -27,8 +37,14 @@ const HouseSchema = new Schema<IHouse>(
       default: "",
     },
     price: {
-      type: Number,
-      default: 0,
+      priceValue: {
+        type: Number,
+        default: 0,
+      },
+      priceUnit: {
+        type: String,
+        default: "",
+      },
     },
     buildingType: {
       type: String,
@@ -39,8 +55,24 @@ const HouseSchema = new Schema<IHouse>(
       default: 0,
     },
     area: {
-      type: Number,
-      default: 0,
+      areaValue: {
+        type: Number,
+        default: 0,
+      },
+      areaUnit: {
+        type: String,
+        default: "",
+      },
+    },
+    sectorArea: {
+      sectorAreaValue: {
+        type: Number,
+        default: 0,
+      },
+      sectorAreaUnit: {
+        type: String,
+        default: "",
+      },
     },
     bathroom: {
       type: String,
