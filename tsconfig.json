@@ -17,5 +17,5 @@
     "resolveJsonModule": true,
     "skipLibCheck": false
   },
-  "include": ["src/**/*", "__tests__/**/*"]
+  "include": ["src/**/*", "__tests__/**/*, node_modules/**/*"]
 }

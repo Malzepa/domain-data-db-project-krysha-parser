@@ -2,7 +2,6 @@ import { initDatabase } from "../../db/init-database";
 import { Telegraf } from "telegraf";
 import { Config } from "../config/index";
 import { UserModel } from "../../db/user/index";
-import { FindOneUserOptionsType } from "../../data/user/index";
 import { HouseModel } from "../../db/house/index";
 import { FindOneHouseOptionsType } from "../../data/house/index";
 import { parseHouseInfo } from "../../../src/domains/krysha-parser/index";
@@ -25,21 +24,21 @@ bot.command("start", async (ctx) => {
   const lastName = ctx.message.from.last_name;
   const username = ctx.message.from.username;
 
-  const findOneOptions: FindOneUserOptionsType = { chatId: chatId.toString() };
-  const existingUser = await UserModel.findOne(findOneOptions);
+  // const findOneOptions: FindOneUserOptionsType = { chatId: chatId.toString() };
+  // const existingUser = await UserModel.findOne(findOneOptions);
+
+  const existingUser = await UserModel.findOne({ chatId: chatId.toString() });
 
   if (!existingUser) {
-    let isParsing = false;
+    // let isParsing = false;
     await ctx.reply(`Добро пожаловать, ${firstName}!`);
 
-    const user = new UserModel({
+    const user = await UserModel.create({
       chatId,
       firstName,
       lastName,
       username,
     });
-
-    await user.save();
   } else {
     await ctx.reply(`Рад тебя видеть, ${existingUser.firstName}!`);
   }
@@ -47,7 +46,7 @@ bot.command("start", async (ctx) => {
 });
 
 bot.on("text", async (ctx) => {
-  let message = "";
+  // let message = "";
 
   await ctx.reply("ID объявления получено.");
   const adId = ctx.message.text.trim();

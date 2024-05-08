@@ -1,10 +1,21 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import { HouseModel } from "../../db/house/index";
+import { getRandomProxy } from "../proxy/getRandomProxy";
+import { HttpProxyAgent } from "http-proxy-agent";
 
 export async function parseHouseInfo(url: string) {
   try {
-    const response = await axios.get(url);
+    const randomProxy = await getRandomProxy();
+
+    const proxyAgent = new HttpProxyAgent(
+      `http://${randomProxy.host}:${randomProxy.port}`
+    );
+
+    const response = await axios.get(url, {
+      httpAgent: proxyAgent,
+    });
+
     const html = response.data;
     const $ = cheerio.load(html);
 
@@ -78,7 +89,7 @@ export async function parseHouseInfo(url: string) {
     const floor = parseInt(floorString) || 0;
     const totalFloors = parseInt(totalFloorsString) || 0;
 
-    const house = new HouseModel({
+    const house = await HouseModel.create({
       adId,
       title,
       price: { priceValue, priceUnit },
@@ -90,8 +101,6 @@ export async function parseHouseInfo(url: string) {
       floor,
       totalFloors,
     });
-
-    await house.save();
 
     console.log("House info saved:", house);
   } catch (error) {
